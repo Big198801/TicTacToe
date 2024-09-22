@@ -66,7 +66,32 @@ public class Map extends JPanel {
             return;
         }
         field[y][x] = HUMAN_DOT;
-       // if ()
+       if (checkEndGame(HUMAN_DOT, STATE_WIN_HUMAN)){
+           return;
+       }
+       aiTurn();
+       repaint();
+       checkEndGame(AI_DOT, STATE_WIN_AI);
+
+    }
+
+    private void aiTurn() {
+        int x, y;
+        do {
+            x = RANDOM.nextInt(fieldSizeX);
+            y = RANDOM.nextInt(fieldSizeY);
+        }while (!isValidCell(x, y));
+        field[y][x] = AI_DOT;
+    }
+
+    private boolean isMapFull(){
+        for (int y = 0; y < fieldSizeY; y++) {
+            for (int x = 0; x < fieldSizeX; x++) {
+                if (field[y][x] == EMPTY_DOT) {
+                    return false;
+                }
+            }
+        }return true;
     }
 
     private boolean isEmptyCell(int x, int y) {
@@ -77,15 +102,42 @@ public class Map extends JPanel {
         return x >= 0 && x < fieldSizeX && y >= 0 && y < fieldSizeY;
     }
 
-    //    private boolean checkWinGame(int dot) {
-//        for (int i = 0; i < fieldSizeX; i++) {
-//            for (int j = 0; j < fieldSizeY; j++) {
-//                if(checkLine(i, j, 1, 0, winLen, dot))return true;
-//                if(checkLine(i, j, 0, -1, winLen, dot)) return true;
-//                if(checkLine(i, j, 0, 1, winLen, dot)) return true;
-//                if(checkLine(i, j, 1, -1, winLen, dot)) return true;
-//            }
-//        }
-//        return false;
-//    }
+    private boolean checkEndGame(int dot, int gameOverType){
+        if (checkWinGame(dot)){
+            this.gameStateType = gameOverType;
+            repaint();
+            return true;
+        }
+        else if (isMapFull()){
+            this.gameStateType = STATE_DRAW;
+            repaint();
+            return true;
+        }
+        return false;
+    }
+
+        private boolean checkWinGame(int dot) {
+        for (int i = 0; i < fieldSizeX; i++) {
+            for (int j = 0; j < fieldSizeY; j++) {
+                if(checkLine(i, j, 1, 0, winLen, dot))return true;
+                if(checkLine(i, j, 0, -1, winLen, dot)) return true;
+                if(checkLine(i, j, 0, 1, winLen, dot)) return true;
+                if(checkLine(i, j, 1, -1, winLen, dot)) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkLine(int x, int y, int vx, int vy, int winLen, int dot) {
+        int farX = x + (winLen - 1) * vx;
+        int farY = y + (winLen - 1) * vy;
+        if (!isEmptyCell(farX, farY)) {
+            return false;
+        }
+        for (int i = 0; i < winLen; i++) {
+            if (field[y + i * vy][x + i * vx] != dot) {
+                return false;
+            }
+        }return true;
+    }
 }

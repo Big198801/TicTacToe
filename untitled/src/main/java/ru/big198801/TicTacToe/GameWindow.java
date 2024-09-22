@@ -1,6 +1,6 @@
 package ru.big198801.TicTacToe;
 
-import ru.big198801.lesson1.SettingsWindow;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,10 @@ public class GameWindow extends JFrame {
     private JButton btnStart, btnExit;
     private GameSettings gameSettings;
     private Map map;
-    public JPanel jBottom;
+    private JPanel jBottom;
+
+
+
 
 
     GameWindow(){
@@ -20,6 +23,8 @@ public class GameWindow extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
+
+
         btnStart = new JButton("Start");
         btnExit = new JButton("Exit");
         jBottom = new JPanel(new GridLayout(1, 2));
