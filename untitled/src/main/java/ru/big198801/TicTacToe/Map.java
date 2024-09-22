@@ -1,6 +1,9 @@
 package ru.big198801.TicTacToe;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 
 public class Map extends JPanel {
@@ -25,15 +28,56 @@ public class Map extends JPanel {
     private int winLen;
     private int fieldSizeY;
     private int fieldSizeX;
-    private char[][] field;
+    private int[][] field;
     private boolean gameWork;
 
+    Map(){
+        setBackground(Color.WHITE);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (gameWork) {
+                    update(e);
+                }
+            }
+        });
 
-        void startNewGame(int mode, int sizeX, int sizeY, int winLen) {
+    }
+    private void initMap(){
+        field = new int[fieldSizeY][fieldSizeX];
+    }
 
+    void startNewGame(int mode, int sizeX, int sizeY, int winLen) {
+        this.mode = mode;
+        this.winLen = winLen;
+        this.fieldSizeX = sizeX;
+        this.fieldSizeY = sizeY;
+        initMap();
+        gameWork = true;
+        this.gameStateType = STATE_GAME;
+        repaint();
+
+    }
+
+    private void update(MouseEvent e) {
+        int x = e.getX() / cellWidth;
+        int y = e.getY() / cellHeight;
+        if(!isValidCell(x, y) || !isEmptyCell(x, y)){
+            return;
         }
+        field[y][x] = HUMAN_DOT;
+       // if ()
+    }
 
-//    private boolean checkWinGame(int dot) {
+    private boolean isEmptyCell(int x, int y) {
+        return field[y][x] == EMPTY_DOT;
+    }
+
+    private boolean isValidCell(int x, int y) {
+        return x >= 0 && x < fieldSizeX && y >= 0 && y < fieldSizeY;
+    }
+
+    //    private boolean checkWinGame(int dot) {
 //        for (int i = 0; i < fieldSizeX; i++) {
 //            for (int j = 0; j < fieldSizeY; j++) {
 //                if(checkLine(i, j, 1, 0, winLen, dot))return true;
